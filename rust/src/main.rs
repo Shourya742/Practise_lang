@@ -5,6 +5,7 @@ pub mod func_and_mod;
 pub mod match_and_exp;
 pub mod option_;
 pub mod structure;
+pub mod traits;
 fn main() {
     println!("Hello, world!");
 }
