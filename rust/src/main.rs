@@ -6,6 +6,7 @@ pub mod match_and_exp;
 pub mod option_;
 pub mod structure;
 pub mod traits;
+pub mod vec_;
 fn main() {
     println!("Hello, world!");
 }
