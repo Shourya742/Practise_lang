@@ -8,6 +8,7 @@ pub mod iters_;
 pub mod match_and_exp;
 pub mod option_;
 pub mod structure;
+pub mod thread_;
 pub mod time;
 pub mod traits;
 pub mod vec_;
