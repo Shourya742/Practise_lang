@@ -7,6 +7,7 @@ pub mod fs_;
 pub mod func_and_mod;
 pub mod hashmap_;
 pub mod hashset_;
+pub mod http_;
 pub mod iters_;
 pub mod match_and_exp;
 pub mod mpsc_;
