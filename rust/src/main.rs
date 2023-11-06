@@ -13,6 +13,7 @@ pub mod iters_;
 pub mod match_and_exp;
 pub mod mpsc_;
 pub mod mutex_;
+pub mod op_overload;
 pub mod option_;
 pub mod scope_thread;
 pub mod serde_;
