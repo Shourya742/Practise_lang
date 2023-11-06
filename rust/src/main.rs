@@ -1,3 +1,27 @@
+//! this is some content for crate-level docs
+//!
+//! ##Detailed Introduction
+//!
+//! this is a detailed intro
+//!
+//! -[x] This crate allows you to create Person objects
+//! -[] This crate allows you to create grocery bills
+//!
+//! #Examples
+//!
+//! ```
+//! let p1 = Person {first_name:"Trevor".to_string()};
+//! println!("{}",p1.first_name)
+//!
+//! ```
+//!
+//! ~~This is outdated so don't use this.~~
+//!
+//!
+//! This is a really **important** concept!!
+//!
+//!
+
 pub mod args_;
 pub mod clap_args;
 pub mod closure;
@@ -15,6 +39,7 @@ pub mod mpsc_;
 pub mod mutex_;
 pub mod op_overload;
 pub mod option_;
+pub mod rust_doc;
 pub mod scope_thread;
 pub mod serde_;
 pub mod structure;
@@ -24,4 +49,17 @@ pub mod traits;
 pub mod traits_dyn;
 pub mod vec_;
 
+///This is the entry point
 fn main() {}
+
+// // This module deals with People and Person Objects
+// pub mod People {
+
+//     // This struct represent user
+//     struct Person {
+//         /// This `first_name` field represent the first anem of the person
+//         first_name: String,
+//         /// This is the `last name` field represent the last name of the person
+//         last_name: String,
+//     }
+// }
