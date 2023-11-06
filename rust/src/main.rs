@@ -2,6 +2,7 @@ pub mod args_;
 pub mod clap_args;
 pub mod closure;
 pub mod d_type_and_var;
+pub mod default_trait;
 pub mod flow_and_cond;
 pub mod fs_;
 pub mod func_and_mod;
@@ -19,6 +20,7 @@ pub mod structure;
 pub mod thread_;
 pub mod time;
 pub mod traits;
+pub mod traits_dyn;
 pub mod vec_;
 
 fn main() {}
