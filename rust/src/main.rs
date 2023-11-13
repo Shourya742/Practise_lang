@@ -24,6 +24,7 @@
 
 pub mod args_;
 pub mod async_;
+pub mod bubble_sort;
 pub mod clap_args;
 pub mod closure;
 pub mod d_type_and_var;
