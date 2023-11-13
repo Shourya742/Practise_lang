@@ -37,6 +37,7 @@ pub mod hashset_;
 pub mod http_;
 pub mod iters_;
 pub mod match_and_exp;
+pub mod merge_sort;
 pub mod mpsc_;
 pub mod mutex_;
 pub mod op_overload;
