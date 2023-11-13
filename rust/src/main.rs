@@ -22,6 +22,7 @@
 //!
 //!
 
+pub mod Linked_List;
 pub mod args_;
 pub mod async_;
 pub mod bubble_sort;
