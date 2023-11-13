@@ -50,23 +50,23 @@ mod test {
     struct RawSend<T>(*mut [T]);
     unsafe impl<T> Send for RawSend<T> {}
 
-    fn threaded_quick_sort<T: 'static + PartialOrd + Debug + Send>(v: &mut [T]) {
-        if v.len() <= 1 {
-            return;
-        }
-        let p = pivot(v);
-        println!("{:?}", v);
-        let (a, b) = v.split_at_mut(p);
-        let raw_a = a as *mut [T];
-        let raw_s = RawSend(raw_a);
-        unsafe {
-            let handle = std::thread::spawn(move || {
-                threaded_quick_sort(&mut *raw_s.0);
-            });
-            threaded_quick_sort(&mut b[1..]);
-            handle.join().ok();
-        }
-    }
+    // fn threaded_quick_sort<T: 'static + PartialOrd + Debug + Send>(v: &mut [T]) {
+    //     if v.len() <= 1 {
+    //         return;
+    //     }
+    //     let p = pivot(v);
+    //     println!("{:?}", v);
+    //     let (a, b) = v.split_at_mut(p);
+    //     let raw_a = a as *mut [T];
+    //     let raw_s = RawSend(raw_a);
+    //     unsafe {
+    //         let handle = std::thread::spawn(move || {
+    //             threaded_quick_sort(&mut *raw_s.0);
+    //         });
+    //         threaded_quick_sort(&mut b[1..]);
+    //         handle.join().ok();
+    //     }
+    // }
 
     #[test]
     fn test_quick_sort() {
