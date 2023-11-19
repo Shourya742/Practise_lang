@@ -25,6 +25,7 @@
 pub mod Linked_List;
 pub mod args_;
 pub mod async_;
+pub mod bin_tree;
 pub mod bubble_sort;
 pub mod clap_args;
 pub mod closure;

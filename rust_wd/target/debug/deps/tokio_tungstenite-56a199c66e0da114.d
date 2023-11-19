@@ -1,0 +1,10 @@
+/Users/shoushar/practise/rust_wd/target/debug/deps/tokio_tungstenite-56a199c66e0da114.rmeta: /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/lib.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/compat.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/connect.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/handshake.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/stream.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/tls.rs
+
+/Users/shoushar/practise/rust_wd/target/debug/deps/tokio_tungstenite-56a199c66e0da114.d: /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/lib.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/compat.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/connect.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/handshake.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/stream.rs /Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/tls.rs
+
+/Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/lib.rs:
+/Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/compat.rs:
+/Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/connect.rs:
+/Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/handshake.rs:
+/Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/stream.rs:
+/Users/shoushar/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.20.1/src/tls.rs:
