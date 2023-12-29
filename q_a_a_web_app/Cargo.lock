@@ -547,6 +547,7 @@ name = "q_a_a_web_app"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "serde_json",
  "tokio",
  "warp",
 ]
