@@ -1,0 +1,7 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.06s
+     Running `target/debug/q_a_a_web_app`
+[2023-12-30T06:00:22Z ERROR q_a_a_web_app] This is an error!
+[2023-12-30T06:00:22Z INFO  q_a_a_web_app] This is info!
+[2023-12-30T06:00:22Z WARN  q_a_a_web_app] Theis is a warning!
+[2023-12-30T06:00:22Z INFO  warp::server] Server::run; addr=127.0.0.1:3030
+[2023-12-30T06:00:22Z INFO  warp::server] listening on http://127.0.0.1:3030

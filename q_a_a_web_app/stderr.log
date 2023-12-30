@@ -1,0 +1,38 @@
+2023-12-30T01:16:04.096060004-05:00 - This is an error!
+2023-12-30T01:16:04.096156296-05:00 - This is info!
+2023-12-30T01:16:04.096206989-05:00 - Theis is a warning!
+2023-12-30T01:16:04.096480330-05:00 - Server::run; addr=127.0.0.1:3030
+2023-12-30T01:16:04.096561638-05:00 - listening on http://127.0.0.1:3030
+2023-12-30T01:18:03.732186014-05:00 - parsed 6 headers
+2023-12-30T01:18:03.732242484-05:00 - incoming body is empty
+2023-12-30T01:18:03.732352375-05:00 - route was called without a query string, defaulting to empty
+2023-12-30T01:18:03.732554104-05:00 - flushed 109 bytes
+2023-12-30T01:26:56.858791695-05:00 - This is an error!
+2023-12-30T01:26:56.858903940-05:00 - This is info!
+2023-12-30T01:26:56.858954312-05:00 - Theis is a warning!
+2023-12-30T01:26:56.859219454-05:00 - Server::run; addr=127.0.0.1:3030
+2023-12-30T01:26:56.859293512-05:00 - listening on http://127.0.0.1:3030
+2023-12-30T01:34:49.115909675-05:00 - This is an error!
+2023-12-30T01:34:49.115972474-05:00 - This is info!
+2023-12-30T01:34:49.116005299-05:00 - Theis is a warning!
+2023-12-30T01:34:49.116251792-05:00 - Server::run; addr=127.0.0.1:3030
+2023-12-30T01:34:49.116296560-05:00 - listening on http://127.0.0.1:3030
+{"time":"2023-12-30T01:44:31.655538556-05:00","message":"This is an error!","module_path":"q_a_a_web_app","file":"src/main.rs","line":15,"level":"ERROR","target":"q_a_a_web_app","thread":"main","thread_id":139807731128896,"mdc":{}}
+{"time":"2023-12-30T01:44:31.655702062-05:00","message":"This is info!","module_path":"q_a_a_web_app","file":"src/main.rs","line":16,"level":"INFO","target":"q_a_a_web_app","thread":"main","thread_id":139807731128896,"mdc":{}}
+{"time":"2023-12-30T01:44:31.655823443-05:00","message":"Theis is a warning!","module_path":"q_a_a_web_app","file":"src/main.rs","line":17,"level":"WARN","target":"q_a_a_web_app","thread":"main","thread_id":139807731128896,"mdc":{}}
+{"time":"2023-12-30T01:44:31.656215049-05:00","message":"Server::run; addr=127.0.0.1:3030","module_path":"warp::server","file":"/home/admin123/.cargo/registry/src/index.crates.io-6f17d22bba15001f/warp-0.3.6/src/server.rs","line":137,"level":"INFO","target":"warp::server","thread":"main","thread_id":139807731128896,"mdc":{}}
+{"time":"2023-12-30T01:44:31.656447433-05:00","message":"listening on http://127.0.0.1:3030","module_path":"warp::server","file":"/home/admin123/.cargo/registry/src/index.crates.io-6f17d22bba15001f/warp-0.3.6/src/server.rs","line":138,"level":"INFO","target":"warp::server","thread":"main","thread_id":139807731128896,"mdc":{}}
+{"time":"2023-12-30T01:46:48.978424634-05:00","message":"This is an error!","module_path":"q_a_a_web_app","file":"src/main.rs","line":15,"level":"ERROR","target":"q_a_a_web_app","thread":"main","thread_id":139640529992256,"mdc":{}}
+{"time":"2023-12-30T01:46:48.978536505-05:00","message":"This is info!","module_path":"q_a_a_web_app","file":"src/main.rs","line":16,"level":"INFO","target":"q_a_a_web_app","thread":"main","thread_id":139640529992256,"mdc":{}}
+{"time":"2023-12-30T01:46:48.978623966-05:00","message":"Theis is a warning!","module_path":"q_a_a_web_app","file":"src/main.rs","line":17,"level":"WARN","target":"q_a_a_web_app","thread":"main","thread_id":139640529992256,"mdc":{}}
+{"time":"2023-12-30T01:46:48.978906660-05:00","message":"Server::run; addr=127.0.0.1:3030","module_path":"warp::server","file":"/home/admin123/.cargo/registry/src/index.crates.io-6f17d22bba15001f/warp-0.3.6/src/server.rs","line":137,"level":"INFO","target":"warp::server","thread":"main","thread_id":139640529992256,"mdc":{}}
+{"time":"2023-12-30T01:46:48.978996034-05:00","message":"listening on http://127.0.0.1:3030","module_path":"warp::server","file":"/home/admin123/.cargo/registry/src/index.crates.io-6f17d22bba15001f/warp-0.3.6/src/server.rs","line":138,"level":"INFO","target":"warp::server","thread":"main","thread_id":139640529992256,"mdc":{}}
+{"time":"2023-12-30T01:46:52.979428025-05:00","message":"GET /questions 200 OK 84.86µs from 127.0.0.1:40326 with {\"user-agent\": \"PostmanRuntime/7.36.0\", \"accept\": \"*/*\", \"postman-token\": \"16a6638f-9c96-4722-94b7-8485aa504835\", \"host\": \"localhost:3030\", \"accept-encoding\": \"gzip, deflate, br\", \"connection\": \"keep-alive\"}","module_path":"q_a_a_web_app","file":"src/main.rs","line":20,"level":"INFO","target":"q_a_a_web_app","thread":"tokio-runtime-worker","thread_id":139640517379840,"mdc":{}}
+{"time":"2023-12-30T01:54:05.303337416-05:00","message":"This is an error!","module_path":"q_a_a_web_app","file":"src/main.rs","line":15,"level":"ERROR","target":"q_a_a_web_app","thread":"main","thread_id":139954667584064,"mdc":{}}
+{"time":"2023-12-30T01:54:05.303470466-05:00","message":"This is info!","module_path":"q_a_a_web_app","file":"src/main.rs","line":16,"level":"INFO","target":"q_a_a_web_app","thread":"main","thread_id":139954667584064,"mdc":{}}
+{"time":"2023-12-30T01:54:05.303525466-05:00","message":"Theis is a warning!","module_path":"q_a_a_web_app","file":"src/main.rs","line":17,"level":"WARN","target":"q_a_a_web_app","thread":"main","thread_id":139954667584064,"mdc":{}}
+{"time":"2023-12-30T01:54:05.303807685-05:00","message":"Server::run; addr=127.0.0.1:3030","module_path":"warp::server","file":"/home/admin123/.cargo/registry/src/index.crates.io-6f17d22bba15001f/warp-0.3.6/src/server.rs","line":137,"level":"INFO","target":"warp::server","thread":"main","thread_id":139954667584064,"mdc":{}}
+{"time":"2023-12-30T01:54:05.303901708-05:00","message":"listening on http://127.0.0.1:3030","module_path":"warp::server","file":"/home/admin123/.cargo/registry/src/index.crates.io-6f17d22bba15001f/warp-0.3.6/src/server.rs","line":138,"level":"INFO","target":"warp::server","thread":"main","thread_id":139954667584064,"mdc":{}}
+{"time":"2023-12-30T01:54:12.919457122-05:00","message":"Start querying questions","module_path":"q_a_a_web_app::routes::question","file":"src/routes/question.rs","line":11,"level":"INFO","target":"q_a_a_web_app::routes::question","thread":"tokio-runtime-worker","thread_id":139954667579136,"mdc":{}}
+{"time":"2023-12-30T01:54:12.919606442-05:00","message":"No Pagination used","module_path":"q_a_a_web_app::routes::question","file":"src/routes/question.rs","line":19,"level":"INFO","target":"q_a_a_web_app::routes::question","thread":"tokio-runtime-worker","thread_id":139954667579136,"mdc":{}}
+{"time":"2023-12-30T01:54:12.919760564-05:00","message":"GET /questions 200 OK 490.125µs from 127.0.0.1:51912 with {\"user-agent\": \"PostmanRuntime/7.36.0\", \"accept\": \"*/*\", \"postman-token\": \"d5e6e8e8-0566-4f44-8449-d021bb52d1cb\", \"host\": \"localhost:3030\", \"accept-encoding\": \"gzip, deflate, br\", \"connection\": \"keep-alive\"}","module_path":"q_a_a_web_app","file":"src/main.rs","line":20,"level":"INFO","target":"q_a_a_web_app","thread":"tokio-runtime-worker","thread_id":139954667579136,"mdc":{}}
