@@ -20,7 +20,7 @@ async fn main() {
         log::info!("{} {} {} {:?} from {} with {:?}",info.method(),info.path(),info.status(),info.elapsed(),info.remote_addr().unwrap(),info.request_headers());
     });
 
-    let store = store::Store::new();
+    let store = store::Store::new("posygres:/ /u:password@localhost:5432/rustwebdev").await;
     let store_filter = warp::any().map(move || store.clone());
 
     let id_filter = warp::any().map(|| uuid::Uuid::new_v4().to_string());
@@ -40,7 +40,7 @@ async fn main() {
 
     let update_question = warp::put()
         .and(warp::path("questions"))
-        .and(warp::path::param::<String>())
+        .and(warp::path::param::<i32>())
         .and(warp::path::end())
         .and(store_filter.clone())
         .and(warp::body::json())
@@ -48,7 +48,7 @@ async fn main() {
 
     let delete_question = warp::delete()
         .and(warp::path("questions"))
-        .and(warp::path::param::<String>())
+        .and(warp::path::param::<i32>())
         .and(warp::path::end())
         .and(store_filter.clone())
         .and_then(routes::question::delete_question);

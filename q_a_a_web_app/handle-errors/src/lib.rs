@@ -5,11 +5,14 @@ use warp::{
     Rejection,Reply
 };
 
+use sqlx::error::Error as SqlxError;
+
 #[derive(Debug)]
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
-    QuestionNotFound
+    QuestionNotFound,
+    DatabaseQueryError(SqlxError)
 }
 
 impl std::fmt::Display for Error {
@@ -17,7 +20,8 @@ impl std::fmt::Display for Error {
         match *self {
             Error::ParseError(ref err) => write!(f,"Cannot parse parameter: {}",err),
             Error::MissingParameters => write!(f,"Missing Parameter"),
-            Error::QuestionNotFound => write!(f,"Question not found")
+            Error::QuestionNotFound => write!(f,"Question not found"),
+            Error::DatabaseQueryError(ref err) => write!(f,"Query could not be executed {}",err)
         }
     }
 }
