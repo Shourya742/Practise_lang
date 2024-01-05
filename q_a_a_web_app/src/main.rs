@@ -7,6 +7,7 @@ use warp::{http::Method, Filter};
 mod routes;
 mod store;
 mod types;
+mod profanity;
 
 #[tokio::main]
 async fn main() {
@@ -14,7 +15,7 @@ async fn main() {
         "handle_errors=warn,practical_rust_book=warn,warp=warn".to_owned()
     });
 
-    let store = store::Store::new("posygres:/ /u:password@localhost:5432/rustwebdev").await;
+    let store = store::Store::new("posygres://admin123:password@localhost:5432/rustwebdev").await;
     sqlx::migrate!()
         .run(&store.clone().connection)
         .await
