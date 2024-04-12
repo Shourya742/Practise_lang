@@ -19,9 +19,9 @@ struct ReadCoroutine {
 }
 
 impl WriteCoroutine {
-    fn new() -> Self {
+    fn new(path: &str) -> Self {
         Self {
-            file_handle: OpenOptions::new().create(true).append(true).open("numbers.txt").unwrap(),
+            file_handle: OpenOptions::new().create(true).append(true).open(path).unwrap(),
         }
     }
 }
@@ -61,6 +61,37 @@ impl Coroutine<i32> for WriteCoroutine {
     }
 }
 
+struct CoroutineManager {
+    reader: ReadCoroutine,
+    writer: WriteCoroutine,
+}
+
+impl CoroutineManager {
+    fn new(read_path: &str, write_path: &str) -> io::Result<Self> {
+        let reader = ReadCoroutine::new(read_path)?;
+        let writer = WriteCoroutine::new(write_path);
+        Ok(Self {
+            reader,
+            writer,
+        })
+    }
+
+    fn run(&mut self) {
+        let mut read_pin = Pin::new(&mut self.reader);
+        let mut write_pin = Pin::new(&mut self.writer);
+        loop {
+            match read_pin.as_mut().resume(()) {
+                CoroutineState::Yielded(number) => {
+                    write_pin.as_mut().resume(number);
+                }
+                CoroutineState::Complete(()) => {
+                    break;
+                }
+            }
+        }
+    }
+}
+
 fn append_number_to_file(n: i32) -> io::Result<()> {
     let mut file = OpenOptions::new().create(true).append(true).open("numbers.txt")?;
     writeln!(file, "{}", n)?;
@@ -76,16 +107,19 @@ fn main() -> io::Result<()> {
     // }
     // let duration = start.elapsed();
     // println!("Time elapsed in file operation is: {:?}", duration);
-    let mut coroutine = ReadCoroutine::new("numbers.csv")?;
+    // let mut coroutine = ReadCoroutine::new("numbers.csv")?;
 
-    loop {
-        match Pin::new(&mut coroutine).resume(()) {
-            CoroutineState::Yielded(number) => println!("{:?}", number),
-            CoroutineState::Complete(()) => {
-                break;
-            }
-        }
-    }
+    // loop {
+    //     match Pin::new(&mut coroutine).resume(()) {
+    //         CoroutineState::Yielded(number) => println!("{:?}", number),
+    //         CoroutineState::Complete(()) => {
+    //             break;
+    //         }
+    //     }
+    // }
+
+    let mut manager = CoroutineManager::new("numbers.txt", "output.txt").unwrap();
+    manager.run();
 
     Ok(())
 }
