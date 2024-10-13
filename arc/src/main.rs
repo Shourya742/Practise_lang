@@ -2,6 +2,7 @@ use std::cell::UnsafeCell;
 use std::ops::Deref;
 use std::ptr::NonNull;
 use std::sync::atomic::{fence, AtomicUsize};
+mod optimized_arc;
 
 pub struct Weak<T> {
     ptr: NonNull<ArcData<T>>,
