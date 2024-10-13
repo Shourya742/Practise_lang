@@ -2,8 +2,11 @@ use std::{
     collections::VecDeque,
     sync::{Condvar, Mutex},
 };
+mod blocking_one_shot_channel;
 mod one_shot_channel;
+mod one_shot_channel_borrowing;
 mod one_shot_channel_mem;
+mod safe_one_shot_channel;
 pub struct Channel<T> {
     queue: Mutex<VecDeque<T>>,
     item_ready: Condvar,
