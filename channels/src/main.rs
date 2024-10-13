@@ -3,6 +3,7 @@ use std::{
     sync::{Condvar, Mutex},
 };
 mod one_shot_channel;
+mod one_shot_channel_mem;
 pub struct Channel<T> {
     queue: Mutex<VecDeque<T>>,
     item_ready: Condvar,
