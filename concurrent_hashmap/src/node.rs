@@ -33,6 +33,6 @@ where K:Eq
 pub(crate) struct Node<K,V> {
     pub(crate) hash: u64,
     pub(crate) key: K,
-    pub(crate) value: UnsafeCell<V>,
+    pub(crate) value: Atomic<V>,
     pub(crate) next: Atomic<Node<K,V>>
 }

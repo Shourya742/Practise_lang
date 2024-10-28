@@ -1,3 +1,7 @@
+use std::{hash::{BuildHasher, DefaultHasher, Hash, Hasher, RandomState}, sync::atomic::Ordering};
+
+use crossbeam::epoch::{Atomic, Guard, Shared};
+
 /// The largest possible table capacity. This value must be
 /// exactly 1<<30 to stay within Java array allocation and indexing
 /// bounds for power of two table sizes, and is further required
@@ -36,7 +40,46 @@ const RESIZE_STAMP_SHIFT: usize = 32 - RESIZE_STAMP_BITS;
 
 mod node;
 
-pub struct HashMap<K,V> {
-    // TODO: Inline this instead
-    bins: Box<[node::BinEntry<K,V>]>
+pub struct SHashMap<K,V, S = RandomState> {
+   table: Atomic<Table<K,V,S>>,
+   build_hasher: S
+}
+
+impl<K,V,S> SHashMap<K, V, S> where S: BuildHasher, K: Hash {
+    pub fn get<'g>(&'g self, key: &K, guard: &'g Guard) -> Option<Shared<'g, V>> {
+        let mut hasher = self.build_hasher.build_hasher();
+        key.hash(&mut hasher);
+        let hasher = hasher.finish();
+        let table = self.table.load(std::sync::atomic::Ordering::SeqCst, guard);
+        if table.is_null() {
+            return None;
+        }
+        if table.bins.len() {
+            return None;
+        }
+
+        let mask = table.bins.len() as u64 - 1;
+        let bini = (hasher & mask) as u128;
+        let bin = table.at(bini, guard);
+        if bin.is_null() {
+            return None;
+        }
+        let node = bin.find(hasher, key);
+        if node.is_null() {
+            return None;
+        }
+        let v = node.value.load(Ordering::SeqCst, guard);
+        assert!(!v.is_null());
+        Some(v)
+    }
+}
+
+struct Table<K,V,S> {
+    bins: [Atomic<node::BinEntry<K,V>>]
+}
+
+impl<K,V,S> Table<K,V,S> {
+    fn at<'g>(&self, i:usize, guard: &'g Guard) -> Shared<'g,node::BinEntry<K,V>> {
+        self.bins[i].load(std::sync::atomic::Ordering::Acquire, guard)
+    }
 }
