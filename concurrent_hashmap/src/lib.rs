@@ -35,3 +35,8 @@ const MAX_RESIZERS: usize = (1 << (32 - RESIZE_STAMP_BITS)) - 1;
 const RESIZE_STAMP_SHIFT: usize = 32 - RESIZE_STAMP_BITS;
 
 mod node;
+
+pub struct HashMap<K,V> {
+    // TODO: Inline this instead
+    bins: Box<[node::BinEntry<K,V>]>
+}
