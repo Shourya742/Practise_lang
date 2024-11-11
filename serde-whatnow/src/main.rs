@@ -29,5 +29,5 @@ mod error;
 mod ser;
 
 fn main() {
-    
+
 }
