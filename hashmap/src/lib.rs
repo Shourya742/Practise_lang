@@ -16,6 +16,53 @@ impl <K,V> HashMap<K, V> {
     }
 }
 
+pub struct OccupiedEntry<'a, K, V> {
+    entry: &'a mut (K, V)
+}
+
+pub struct VacantEntry<'a, K,V> {
+    key: K,
+    map: &'a mut HashMap<K, V>,
+    bucket: usize
+}
+
+impl<'a, K, V> VacantEntry<'a, K, V> {
+    pub fn insert(self, value: V) -> &'a mut V where K: Hash + Eq{
+        self.map.buckets[self.bucket].push((self.key, value));
+        self.map.items += 1;
+        &mut self.map.buckets[self.bucket].last_mut().unwrap().1
+    }
+}
+
+pub enum Entry<'a, K, V> {
+    Occupied(OccupiedEntry<'a, K, V>),
+    Vacant(VacantEntry<'a, K, V>)
+}
+
+
+impl<'a, K, V> Entry<'a, K, V> where K: Hash + Eq{
+    pub fn or_insert(self, value: V) -> &'a mut V {
+        match self {
+            Entry::Occupied(e) => &mut e.entry.1,
+            Entry::Vacant(e) => e.insert(value)
+        }
+    }
+
+    pub fn or_insert_with<F>(self, maker: F) -> &'a mut V where F: FnOnce() -> V {
+        match self {
+            Entry::Occupied(e) => &mut e.entry.1,
+            Entry::Vacant(e) => e.insert(maker())
+        }
+    }
+
+    pub fn or_default<F>(self, maker: F) -> &'a mut V where V: Default {
+        match self {
+            Entry::Occupied(e) => &mut e.entry.1,
+            Entry::Vacant(e) => e.insert(V::default())
+        }
+    }
+}
+
 impl <K,V> HashMap<K, V>  where K: Hash + Eq{
 
     fn bucket<Q>(&self, key: &Q) -> usize where K: Borrow<Q>, Q: Hash + Eq + ?Sized {
@@ -23,6 +70,18 @@ impl <K,V> HashMap<K, V>  where K: Hash + Eq{
         key.hash(&mut hasher);
         (hasher.finish() % self.buckets.len() as u64) as usize
     } 
+
+    pub fn entry(&mut self, key: K) -> Entry<K, V> where K: Hash + Eq{
+        if self.buckets.is_empty() || self.items > 3 * self.buckets.len() / 4 {
+            self.resize();
+        }
+        let bucket_k = self.bucket(&key);
+        let bucket = &mut self.buckets[bucket_k];
+        if let Some(entry) =  bucket.iter_mut().find(|&&mut (ref ekey, _)| ekey == &key) {
+            return Entry::Occupied(OccupiedEntry{entry: unsafe {&mut *(entry as *mut _)}})
+        }
+        Entry::Vacant(VacantEntry { key, map: self, bucket: bucket_k })
+    }
 
     pub fn insert(&mut self, key: K, value: V) -> Option<V> {
         if self.buckets.is_empty() || self.items > 3 * self.buckets.len() / 4 {
@@ -129,6 +188,54 @@ impl<'a, K, V> IntoIterator for &'a HashMap<K, V> {
             map: self,
             bucket: 0,
             at: 0
+        }
+    }
+}
+
+
+
+impl<K,V> FromIterator<(K,V)> for HashMap<K,V> where K: Hash + Eq {
+    fn from_iter<I: IntoIterator<Item = (K,V)>>(iter: I) -> Self where I: IntoIterator<Item = (K, V)>{
+        let mut map = HashMap::new();
+        for (k, v) in iter {
+            map.insert(k, v);
+        }
+        map
+    }
+}
+
+pub struct IntoIter<K,V> {
+    map: HashMap<K, V>,
+    bucket: usize
+}
+
+impl<K,V> Iterator for IntoIter<K,V> {
+    type Item = (K, V);
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            match self.map.buckets.get_mut(self.bucket) {
+                Some(bucket) => match bucket.pop() {
+                    Some(x) => break Some(x),
+                    None => {
+                        self.bucket += 1;
+                        continue;
+                    }
+                }
+                None => break None
+            }
+        }
+    }
+}
+
+
+
+impl< K, V> IntoIterator for  HashMap<K, V> {
+    type Item = (K, V);
+    type IntoIter = IntoIter<K, V>;
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter {
+            map: self,
+            bucket: 0,
         }
     }
 }
