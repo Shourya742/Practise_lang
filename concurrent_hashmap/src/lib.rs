@@ -1,4 +1,4 @@
-use std::{hash::{BuildHasher, DefaultHasher, Hash, Hasher, RandomState}, sync::atomic::Ordering};
+use std::{hash::{BuildHasher, DefaultHasher, Hash, Hasher, RandomState}, sync::atomic::{AtomicIsize, AtomicUsize, Ordering}};
 
 use crossbeam::epoch::{Atomic, Guard, Owned, Shared};
 use node::{BinEntry, Node};
@@ -43,6 +43,14 @@ mod node;
 
 pub struct SHashMap<K,V, S = RandomState> {
    table: Atomic<Table<K,V,S>>,
+   count: AtomicUsize,
+   /// Table initialization and resizing control. When negative, the 
+   /// table is being initialized or resized: -1  for initialization,
+   /// else -(1 + the number of active resizing threads). Otherwise,
+   /// when table is null, holds the initial table size to use upon
+   /// creation, or 0 for default. After intialization, holds the 
+   /// next element count value upon to resize the table.
+   size_ctl: AtomicIsize,
    build_hasher: S
 }
 
@@ -174,6 +182,55 @@ impl<K,V,S> SHashMap<K, V, S> where S: BuildHasher, K: Hash {
             }
         }
         todo!()
+    }
+
+    fn add_count(&self, n: isize, resize_hint: Option<usize>) {
+        let count = if n > 0 {
+            let n = n as usize;
+            self.count.fetch_add(n, Ordering::SeqCst) + n
+        } else if n < 0 {
+            let n = n.abs() as usize;
+            self.count.fetch_sub(n, Ordering::SeqCst) + n
+        } else {
+            self.count.load(Ordering::SeqCst)
+        };
+
+        // if resize_hint is None, it means the callet does not want us to consider a resize.
+        // if it is Some(n). the callet saw n entries in a bin
+        if resize_hint.is_none() {
+            return;
+        }
+        let saw_bin_length = resize_hint.unwrap();
+        loop {
+            let sc = self.size_ctl.load(Ordering::SeqCst);
+            if count < sc as usize {
+                // we're not at the next resize point
+                break;
+            }
+
+            let guard = crossbeam::epoch::pin();
+            let mut table = self.table.load(Ordering::SeqCst, &guard);
+            if table.is_null() {
+                // table will be initailized by another thread anyway
+                break;
+            }
+            let  n = table.bins.len();
+            if n >=  MAXIMUM_CAPACITY {
+                // can't resize any more anyway
+                break;
+            }
+            let rs = Self::resize_stamp(n) << RESIZE_STAMP_SHIFT;
+            if sc < 0 {
+                if sc == rs + MAX_RESIZERS 
+            }
+
+        }
+    }
+
+    /// Returns the stamp bits for resizing a table of size n.
+    /// Must be negative when shifted left by RESIZE_STAMP_SHIFT
+    fn resize_stamp(n: usize) -> usize{
+        (n.leading_zeros() | (1 <<(RESIZE_STAMP_BITS - 1))) as usize
     }
 }
 
