@@ -8,5 +8,5 @@ edition = "2021"
 [dependencies]
 
 [lib]
-name = "data_layer"   
+name = "async_runtime"   
 path = "src/lib.rs"  
