@@ -46,11 +46,11 @@ impl<T> LinkedList<T> {
 
     pub fn split_off(&mut self, at: usize) -> Option<Self> {
         let mut next = &mut self.head;
-        let mut  i =0;
+        let mut i = 0;
         while let Some(n) = next {
             i += 1;
             if i == at {
-                let mut  l = LinkedList::new();
+                let mut l = LinkedList::new();
                 l.head = n.next.take();
                 l.len = self.len - 1;
                 self.len -= l.len;
@@ -117,4 +117,3 @@ mod tests {
         assert_eq!(split.pop_front(), Some(5));
     }
 }
-
