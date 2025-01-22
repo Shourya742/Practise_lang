@@ -4,7 +4,7 @@ use std::{alloc::{alloc, realloc, Layout}, ptr::NonNull};
 
 
 pub struct RawVec<T> {
-    ptr: NonNull<T>,
+    pub ptr: NonNull<T>,
     cap: usize
 }
 
@@ -42,7 +42,7 @@ impl<T> RawVec<T> {
         self.cap = new_cap;
     }
 
-    fn grow(&mut self) {
+    pub fn grow(&mut self) {
         let (new_cap, old_layout) = if self.cap == 0 {
             (4, None)
         } else {
