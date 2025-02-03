@@ -13,9 +13,11 @@ use std::{
 
 use epoll::{Event, Events};
 use reader::MessageReader;
+use writer::MessageWriter;
 
 struct Client {
     reader: MessageReader<ClientToServerMsg>,
+    writer: MessageWriter<ServerToClientMsg>,
     address: SocketAddr,
     connected: bool,
     last_activity: Instant
@@ -94,6 +96,7 @@ fn main() -> anyhow::Result<()> {
                 let client = Arc::new(client);
                 clients.push(Client {
                     reader: MessageReader::<ClientToServerMsg>::new(client.clone()),
+                    writer: MessageWriter::<ServerToClientMsg>::new(client.clone()),
                     address,
                     connected: true,
                     last_activity: Instant::now()
@@ -158,6 +161,8 @@ fn handle_client(client: &mut Client) -> anyhow::Result<()> {
     client.last_activity = Instant::now();
 
     eprintln!("Received msg: {msg:?}");   
+
+    client.writer.send(ServerToClientMsg::Pong)?;
 
     Ok(())
 }

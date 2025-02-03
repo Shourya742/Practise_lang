@@ -1,29 +1,29 @@
-use std::{io::Write, marker::PhantomData};
+use std::{io::Write, marker::PhantomData, net::TcpStream, sync::Arc};
 
 use serde::Serialize;
 
-pub struct MessageWriter<T, W> {
-    sink: W,
+pub struct MessageWriter<T> {
+    sink: Arc<TcpStream>,
     _phantom: PhantomData<T>,
 }
 
-impl<T: Serialize, W: Write> MessageWriter<T, W> {
-    pub fn new(sink: W) -> Self {
+impl<T: Serialize> MessageWriter<T> {
+    pub fn new(sink: Arc<TcpStream>) -> Self {
         Self {
             sink,
             _phantom: Default::default(),
         }
     }
 
-    pub fn inner(&self) -> &W {
-        &self.sink
-    }
+    // pub fn inner(&self) -> &W {
+    //     &self.sink
+    // }
 
     pub fn send(&mut self, message: T) -> anyhow::Result<()> {
-        let serialized = serde_json::to_vec(&message)?;
-        self.sink.write_all(&serialized)?;
-        self.sink.write_all(b"\n")?;
-        self.sink.flush()?;
+        let mut serialized = serde_json::to_vec(&message)?;
+        serialized.extend_from_slice(&b"\n"[..]);
+        self.sink.as_ref().write(&serialized)?;
+        self.sink.as_ref().flush()?;
         Ok(())
     }
 }
