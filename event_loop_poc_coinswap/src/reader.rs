@@ -1,4 +1,4 @@
-use std::{io::Read, marker::PhantomData};
+use std::{io::Read, marker::PhantomData, net::TcpStream, sync::Arc};
 
 use serde::de::DeserializeOwned;
 
@@ -6,25 +6,21 @@ use serde::de::DeserializeOwned;
 
 const MAX_MESSAGE_SIZE: usize = 256;
 
-pub struct MessageReader<T,R> {
-    stream: R,
+pub struct MessageReader<T> {
+    stream: Arc<TcpStream>,
     buffer: Vec<u8>,
     loaded: usize,
     _phantom: PhantomData<T>
 }
 
-impl<T: DeserializeOwned, R: Read> MessageReader<T,R> {
-    pub fn new(stream: R) -> Self {
+impl<T: DeserializeOwned> MessageReader<T> {
+    pub fn new(stream: Arc<TcpStream>) -> Self {
         Self {
             buffer: vec![0; MAX_MESSAGE_SIZE*4],
             loaded: 0,
             stream,
             _phantom : Default::default()
         }
-    }
-
-    pub fn inner(&self) -> &R {
-        &self.stream
     }
 
     pub fn recv(&mut self) -> Option<std::io::Result<T>> {
@@ -44,7 +40,7 @@ impl<T: DeserializeOwned, R: Read> MessageReader<T,R> {
                 return Some(Err(std::io::Error::new(std::io::ErrorKind::OutOfMemory, "Too large message")));
             }
 
-            let read_bytes = match self.stream.read(&mut self.buffer[self.loaded..]) {
+            let read_bytes = match self.stream.as_ref().read(&mut self.buffer[self.loaded..]) {
                 Ok(b) => b,
                 Err(error) => return Some(Err(error))
             };
