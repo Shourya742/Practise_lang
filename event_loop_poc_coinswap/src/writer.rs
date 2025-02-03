@@ -2,18 +2,16 @@ use std::{io::Write, marker::PhantomData};
 
 use serde::Serialize;
 
-
-
 pub struct MessageWriter<T, W> {
     sink: W,
-    _phantom: PhantomData<T>
+    _phantom: PhantomData<T>,
 }
 
-impl<T:Serialize, W: Write> MessageWriter<T, W> {
+impl<T: Serialize, W: Write> MessageWriter<T, W> {
     pub fn new(sink: W) -> Self {
         Self {
             sink,
-            _phantom: Default::default()
+            _phantom: Default::default(),
         }
     }
 
@@ -28,4 +26,4 @@ impl<T:Serialize, W: Write> MessageWriter<T, W> {
         self.sink.flush()?;
         Ok(())
     }
- }
+}
