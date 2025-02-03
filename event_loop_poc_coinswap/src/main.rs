@@ -1,6 +1,8 @@
 #![allow(unreachable_code)]
 #![allow(dead_code)]
 #![allow(unused_variables)]
+mod reader;
+mod writer;
 use std::{io::ErrorKind, net::TcpListener, time::Duration};
 
 fn main() -> anyhow::Result<()> {
@@ -20,4 +22,13 @@ fn main() -> anyhow::Result<()> {
         println!("Connected from {address}");
     }
     Ok(())
+}
+
+
+enum ClientToServerMsg {
+    Ping
+}
+
+enum ServerToClientMsg {
+    Pong
 }
