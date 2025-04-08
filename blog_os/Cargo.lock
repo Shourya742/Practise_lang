@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "sv2_serde_json"
+name = "blog_os"
 version = "0.1.0"

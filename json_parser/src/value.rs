@@ -17,6 +17,34 @@ pub enum Value {
     Null
 }
 
+impl Value {
+    pub fn to_json_string(&self) -> String {
+        match self {
+            Value::String(s) => format!("\"{}\"", s), // JSON strings are wrapped in quotes
+            Value::Number(Number::I64(i)) => i.to_string(),
+            Value::Number(Number::F64(f)) => f.to_string(),
+            Value::Boolean(b) => b.to_string(),
+            Value::Array(arr) => {
+                let elements: Vec<String> = arr.iter().map(|v| v.to_json_string()).collect();
+                format!("[{}]", elements.join(","))
+            }
+            Value::Object(obj) => {
+                let members: Vec<String> = obj
+                    .iter()
+                    .map(|(k, v)| format!("\"{}\":{}", k, v.to_json_string()))
+                    .collect();
+                format!("{{{}}}", members.join(","))
+            }
+            Value::Null => "null".to_string(),
+        }
+    }
+
+    pub fn to_json_bytes(&self) -> Vec<u8> {
+        self.to_json_string().into_bytes()
+    }
+}
+
+
 
 impl TryFrom<&Value> for String {
     type Error = ();
