@@ -1,0 +1,7 @@
+[package]
+name = "guide"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+burn = {version = "~0.16", features = ["train", "wgpu", "vision"]}
