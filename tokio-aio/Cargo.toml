@@ -20,6 +20,23 @@ path = "src/bin/echo-epoll-edge.rs"
 name = "echo-epoll-level"
 path = "src/bin/echo-epoll-level.rs"
 
+[[bin]]
+name = "echo-mio-level"
+path = "src/bin/echo-mio-level.rs"
+
+[[bin]]
+name = "echo-mio-edge"
+path = "src/bin/echo-mio-edge.rs"
+
+[[bin]]
+name = "echo-tokio"
+path = "src/bin/echo-tokio.rs"
+
+
+[[bin]]
+name = "echo-tokio-mpsc"
+path = "src/bin/echo-tokio-mpsc.rs"
+
 
 [dependencies]
 nix = { version = "0.9.0" }
