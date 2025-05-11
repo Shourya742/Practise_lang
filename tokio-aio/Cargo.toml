@@ -37,6 +37,15 @@ path = "src/bin/echo-tokio.rs"
 name = "echo-tokio-mpsc"
 path = "src/bin/echo-tokio-mpsc.rs"
 
+[[bin]]
+name = "mio-empty"
+path = "src/bin/mio-empty.rs"
+
+[[bin]]
+name = "mio-mixed"
+path = "src/bin/mio-mixed.rs"
+
+
 
 [dependencies]
 nix = { version = "0.9.0" }
