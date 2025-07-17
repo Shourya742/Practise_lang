@@ -1,0 +1,12 @@
+[package]
+name = "memory_tracer"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+backtrace = "0.3.75"
+
+[dev-dependencies]
+tokio = { version = "1.46.1", features = ["full"] }
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
