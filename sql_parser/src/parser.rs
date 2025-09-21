@@ -1,20 +1,25 @@
-use crate::{error::{Backtrace, ParseError}, token::{tokenize, Token, TokenKind}};
-
+use crate::{
+    error::{Backtrace, ParseError},
+    token::{Token, TokenKind, tokenize},
+};
 
 pub type ParseResult<T> = Result<T, ParseError>;
-
 
 pub struct Parser<'a> {
     tokens: &'a [Token<'a>],
     pos: usize,
     backtrace: &'a Backtrace,
-    input: &'a str
+    input: &'a str,
 }
-
 
 impl<'a> Parser<'a> {
     pub fn new(tokens: &'a [Token<'a>], backtrace: &'a Backtrace, input: &'a str) -> Self {
-        Parser { tokens, pos: 0, backtrace, input }
+        Parser {
+            tokens,
+            pos: 0,
+            backtrace,
+            input,
+        }
     }
 
     pub fn current(&self) -> Option<&Token<'a>> {
@@ -33,7 +38,12 @@ impl<'a> Parser<'a> {
         match self.current() {
             Some(token) if token.kind == expected => Ok(self.advance()),
             Some(token) => {
-                self.backtrace.track_error(token.span.start, &format!("{expected:?}"), Some(token.text), self.input);
+                self.backtrace.track_error(
+                    token.span.start,
+                    &format!("{expected:?}"),
+                    Some(token.text),
+                    self.input,
+                );
                 Err(self.backtrace.get_error(self.input))
             }
             None => {
@@ -89,8 +99,8 @@ impl<'a> Parser<'a> {
         error
     }
 
-       /// Check if current token might be a typo for the expected keyword
-       fn check_for_keyword_typo(
+    /// Check if current token might be a typo for the expected keyword
+    fn check_for_keyword_typo(
         &mut self,
         expected_keyword: &str,
         starts_with_chars: &[char],
@@ -155,11 +165,7 @@ impl<'a> Parser<'a> {
         }
         false
     }
-
-
 }
-
-
 
 pub fn parse_sql(sql: &str) -> Result<(), ParseError> {
     let tokens = tokenize(sql);
@@ -167,4 +173,3 @@ pub fn parse_sql(sql: &str) -> Result<(), ParseError> {
     let mut parser = Parser::new(&tokens, &backtrace, sql);
     Ok(())
 }
-

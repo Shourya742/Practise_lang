@@ -1,13 +1,10 @@
 use crate::token::TokenKind;
 
-
-
-
 #[derive(Debug, Clone, PartialEq)]
 pub enum Literal<'a> {
     Number(i64),
     Float(f64),
-    String(&'a str)
+    String(&'a str),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -23,19 +20,20 @@ pub enum BinaryOp {
     Plus,
     Minus,
     Multiply,
-    Divide
+    Divide,
 }
 
+#[derive(Debug, Clone)]
 pub enum Expr<'a> {
     Column(&'a str),
     Literal(Literal<'a>),
     Binary {
         left: Box<Expr<'a>>,
         op: BinaryOp,
-        right: Box<Expr<'a>>
+        right: Box<Expr<'a>>,
     },
     Paren(Box<Expr<'a>>),
-    Star
+    Star,
 }
 
 fn get_precedence(token: TokenKind) -> Option<(u8, bool)> {
@@ -51,7 +49,6 @@ fn get_precedence(token: TokenKind) -> Option<(u8, bool)> {
         _ => None,
     }
 }
-
 
 impl<'a> std::fmt::Display for Expr<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
