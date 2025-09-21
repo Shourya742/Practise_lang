@@ -2,7 +2,6 @@ use std::{fmt::Display, ops::Range};
 
 use logos::Logos;
 
-
 #[derive(Logos, Debug, Clone, Copy, PartialEq, Eq)]
 #[logos(skip r"[ \t\r\n\f]+")] // Skip whitespace
 #[logos(skip r"--[^\n]*")] // Skip SQL comments 
@@ -112,9 +111,8 @@ pub enum TokenKind {
 pub struct Token<'a> {
     pub text: &'a str,
     pub kind: TokenKind,
-    pub span: Range<usize>
+    pub span: Range<usize>,
 }
-
 
 impl<'a> Token<'a> {
     pub fn new(text: &'a str, kind: TokenKind, span: Range<usize>) -> Self {
@@ -127,7 +125,6 @@ impl Display for Token<'_> {
         write!(f, "{:?}({})", self.kind, self.text)
     }
 }
-
 
 pub fn tokenize(input: &str) -> Vec<Token<'_>> {
     let mut tokens = Vec::new();
@@ -146,7 +143,6 @@ pub fn tokenize(input: &str) -> Vec<Token<'_>> {
     tokens.push(Token::new("", TokenKind::Eof, len..len));
     tokens
 }
-
 
 pub fn show_memory_usage(sql: &str) {
     println!("\n=== Zero-Copy Memory Demo ===");
@@ -170,7 +166,7 @@ pub fn show_memory_usage(sql: &str) {
 
 #[cfg(test)]
 mod tests {
-    use crate::token::{tokenize, TokenKind};
+    use crate::token::{TokenKind, tokenize};
 
     #[test]
     fn test_tokenize_basic() {
