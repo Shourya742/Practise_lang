@@ -202,3 +202,36 @@ impl<'a> Parser<'a> {
         }
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::error::Backtrace;
+    use crate::token::tokenize;
+
+    #[test]
+    fn test_precedence() {
+        let input = "2 + 3 * 4";
+        let tokens = tokenize(input);
+        let backtrace = Backtrace::new();
+        let mut parser = Parser::new(&tokens, &backtrace, input);
+
+        let expr = parser.parse_expr().unwrap();
+
+        assert_eq!(format!("{}", expr), "(2 + (3 * 4))");
+    }
+
+    #[test]
+    fn test_complex_expression() {
+        let input = "age > 18 AND status = 'active' OR admin = 1";
+        let tokens = tokenize(input);
+        let backtrace = Backtrace::new();
+        let mut parser = Parser::new(&tokens, &backtrace, input);
+
+        let expr = parser.parse_expr().unwrap();
+
+        let expected = "(((age > 18) AND (status = 'active')) OR (admin = 1))";
+        assert_eq!(format!("{}", expr), expected);
+    }
+}

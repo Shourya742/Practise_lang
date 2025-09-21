@@ -145,3 +145,29 @@ impl<'a> fmt::Display for CTE<'a> {
         write!(f, " AS ({})", self.query)
     }
 }
+
+
+
+#[cfg(test)]
+mod tests {
+    use crate::parser::parse_sql_to_string;
+
+    #[test]
+    fn test_simple_cte() {
+        let sql = "WITH t AS (SELECT 1) SELECT * FROM t";
+        let result = parse_sql_to_string(sql);
+        assert!(result.is_ok());
+        let ast_str = result.unwrap();
+        assert!(ast_str.contains("With"));
+        assert!(ast_str.contains("ctes"));
+    }
+
+    #[test]
+    fn test_recursive_cte() {
+        let sql = "WITH RECURSIVE t(n) AS (SELECT 1) SELECT * FROM t";
+        let result = parse_sql_to_string(sql);
+        assert!(result.is_ok());
+        let ast_str = result.unwrap();
+        assert!(ast_str.contains("recursive: true"));
+    }
+}
