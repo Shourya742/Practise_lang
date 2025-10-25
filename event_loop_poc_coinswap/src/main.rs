@@ -33,6 +33,7 @@ impl Client {
 }
 
 fn main() -> anyhow::Result<()> {
+    let hello = "hey";
     let server = TcpListener::bind(("127.0.0.1", 5555))?;
     server.set_nonblocking(true)?;
 

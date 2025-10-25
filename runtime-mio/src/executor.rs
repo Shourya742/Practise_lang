@@ -1,8 +1,6 @@
 use std::{
     collections::{HashMap, hash_map::Entry},
-    error,
     io::ErrorKind,
-    mem,
     net::{SocketAddr, ToSocketAddrs},
     pin::Pin,
     sync::{Arc, Mutex, OnceLock, mpsc},
