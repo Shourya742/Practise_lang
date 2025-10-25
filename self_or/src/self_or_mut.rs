@@ -1,0 +1,37 @@
+use crate::sealed::Sealed;
+
+/// A representation of an instance of a type that is either the instance itself,
+/// or a mutable reference to the instance.
+///
+/// Notice that, either variant of the instance is capable_of:
+/// * producing a shared reference through `get_ref` method, and
+/// * a mutable reference through `get_mut` method
+pub trait SoM<T>: Sealed {
+    fn get_ref(&self) -> &T;
+
+    fn get_mut(&mut self) -> &mut T;
+}
+
+impl<T> SoM<T> for T {
+    #[inline(always)]
+    fn get_ref(&self) -> &T {
+        self
+    }
+
+    #[inline(always)]
+    fn get_mut(&mut self) -> &mut T {
+        self
+    }
+}
+
+impl<T> SoM<T> for &mut T {
+    #[inline(always)]
+    fn get_ref(&self) -> &T {
+        self
+    }
+
+    #[inline(always)]
+    fn get_mut(&mut self) -> &mut T {
+        self
+    }
+}
