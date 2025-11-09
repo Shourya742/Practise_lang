@@ -1,0 +1,237 @@
+# Composition Idea
+
+So far, with the queue types we have achieved:
+* to define a statically-typed collection of heterogeneous types, or equivalently, to define incremental ad-hoc structs; and
+* to create a generic type-safe builder that lets us build any queue or any struct.
+
+However, the main goal is to have a heterogeneous collection of elements with a shared behavior.
+
+If we go with the classical example, we want a heterogeneous collection of things that we can draw:
+
+* We have a `Draw` trait defined by the `fn draw(&self)` method.
+* A bunch of components implement this trait such as `Button` or `SelectBox`.
+* Finally, we have a `Screen` which holds a heterogeneous collection of components implementing `Draw`.This allows the screen to draw all
+components.
+
+We will approach to this problem from a very different perspective.
+
+## Defining Identity and Composition for Draw
+
+Let's define our `Screen` as a queue of heterogeneous types, all of which implement `Draw`.
+
+What if we also require queue implementations to implement `Draw`?
+
+In other words, we require `StQueue: Draw`. Recall that we have two concrete queue implementations: `QueueSingle` and non-empty `Queue`.
+
+## Draw on a queue with single element
+
+What should `QueueSingle::<F>::draw(&self)`?
+
+* Trivial! It does what `F: Draw` would've done.
+* This is where we define the identity.
+
+```rust
+impl<F: Draw> Draw for QueueSingle<F> {
+    fn draw(&self) {
+        self.f.draw();
+    }
+}
+```
+
+## Draw on a multple-element queue
+
+Recall that a multiple-element `Queue` is composed of two parts, the `front` element, and the `back` defining the queue of remaining elements.
+As we mentioned in the beginning, all elements in the queue implement `Draw`, and so does the `front`.
+Further, since the back itself is a queue and all queues are required to implement `Draw`.
+
+Back to the question.
+
+What should `Queue::draw(&self)` do?
+* This is where we define composition.
+* The sensible thing to do for this example is probably to draw them both. You may decide on the order if it matters.
+
+The back being a queue might make it a bit confusing. An easy way to think about is to consider the back as a single `Draw` element. This is
+the case when the queue has two elements anyways. And if we properly define the composition for two shapes, it will work for any number of 
+shapes.
+
+```rust
+impl<F, B> Draw for Queue<F, B>
+where
+F: Draw,
+B: StQueue
+{
+    fn draw(&self) {
+        self.f.draw();
+        self.b.draw();
+    }
+}
+```
+
+## A Note on Performance
+
+Notice that self.f.draw() is a direct method call.
+
+How about self.b.draw()?
+
+The back is a statically typed queue, so we know that this is not a virtual call.
+
+Is it recursion?
+
+Also no. Although, it feels recursive, there is no recursion involved. It can completely be inlined as calls to the concrete front elements.
+
+For instance, assume we have a queue of four elements of types X1, X2, X3 and X4, all implementing `Draw`. Type of our queue is
+`Queue<X1, Queue<X2, Queue<X3, QueueSingle<X4>>>>`.
+
+Now the `draw` implementation that we defined for the non-empty queue on this queue is identical to the `draw_hand_written` implementation
+below:
+
+```rust
+pub struct X1;
+impl Draw for X1 { fn draw(&self) {} }
+pub struct X2;
+impl Draw for X2 { fn draw(&self) {} }
+pub struct X3;
+impl Draw for X3 { fn draw(&self) {} }
+pub struct X4;
+impl Draw for X4 { fn draw(&self) {} }
+
+impl Queue<X1, Queue<X2, Queue<X3, QueueSingle<X4>>>> {
+    fn draw_hand_written(&self) {
+        self.front.draw();                  // X1
+        self.back.front.draw();             // X2
+        self.back.back.front.draw();        // X3
+        self.back.back.back.front.draw();   // X4
+    }
+}
+
+```
+
+All calls are transparent to the compiler and luckily we do not need to write this:)
+
+## Defining Identity and Composition for Another Example
+
+Notice that composition for `draw` is just sequential calling them on elements. To demonstrate the flexibility of the approach, it is helpful to 
+look at another example. Let's say we have the following sum trait:
+
+```rust
+pub trait Sum {
+    fn sum(&self) -> i64; 
+}
+```
+
+
+
+Various types of numbers that can be turned into i64 can implement this, since sum of a single number is itself. Then, we can implement the trait for empty and non-empty queues as follows:
+```rust
+impl<F: Sum> Sum for QueueSingle<F> {
+    fn sum(self) -> i64 {
+        self.f.sum() // identity
+    }
+}
+
+impl<F: Sum, B: StQueue> Sum for Queue<F, B> {
+    fn sum(self) -> i64 {
+        self.f.sum() + self.b.sum() // composition: +
+    }
+}
+```
+This would allow to write the following code:
+```rust
+let queue = Queue::new(1i16)
+    .push(2i32)
+    .push(3i32)
+    .push(4i64)
+    .push(5i32)
+    .push(6i64)
+    .push(7i16);
+let sum = queue.sum();
+assert_eq!(sum, 28);
+where the queue.sum() call can be inlined as 1 + 2 + 3 + 4 + 5 + 6 + 7.
+
+```
+
+## Defining Screen as a Statically Typed Queue
+
+It didn't take much to set up the `Draw` implementation of the queues, and now we are ready to define our screen as a statically typed queue.
+But first, let's add some example shapes that we can draw.
+
+```rust
+#[derive(Debug)]
+pub struct Button {
+    pub width: u32,
+    pub height: u32,
+    pub label: String,
+}
+
+impl Draw for Button {
+    fn draw(&self) {
+        println!("{self:?}");
+    }
+}
+
+#[derive(Debug)]
+struct SelectBox {
+    pub width: u32,
+    pub height: u32,
+    pub options: Vec<String>,
+}
+
+impl Draw for SelectBox {
+    fn draw(&self) {
+        println!("{self:?}");
+    }
+}
+```
+
+Finally, our screen implementation with `new`, `push` and `run` methods.
+
+```rust
+struct Screen<Q: StQueue>(Q);
+
+impl<F: Draw> Screen<QueueSingle<F>> {
+    fn new<F: Draw>(component: F) -> Self {
+        Self(QueueSingle::new(component))
+    }
+}
+
+impl<Q: StQueue> Screen<Q> {
+    fn push<S: Draw>(self, component: S) -> Screen<Q::PushBack<S>> {
+        Screen(self.0.push(component))
+    }
+
+    fn run(&self) {
+        self.0.draw();
+    }
+}
+```
+
+This is suffice for achieving the following.
+
+```rust
+let screen = Screen::new(Button {
+    width: 3,
+    height: 4,
+    label: String::from("login"),
+})
+.push(Button {
+    width: 4,
+    height: 5,
+    label: String::from("logout"),
+})
+.push(SelectBox {
+    width: 10,
+    height: 6,
+    options: vec![String::from("This"), String::from("that")],
+});
+
+// draw all components
+screen.run();
+```
+
+Pretty dynamic look and feel.
+But strongly typed!
+No box, no virtual function calls, and no recursion.
+This is a very useful pattern.
+
+But there is a problem. You might've noticed that we do not import the queues from meta crate in the example file. Instead, we re-implemented
+them. 
