@@ -1,4 +1,7 @@
 use std::{thread::sleep, time::Duration};
+mod website;
+// mod states_struct;
+// mod state_type_param;
 
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
