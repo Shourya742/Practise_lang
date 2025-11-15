@@ -3,6 +3,8 @@ mod website;
 // mod states_struct;
 // mod state_type_param;
 
+mod hlist;
+
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
 struct Unbounded;
